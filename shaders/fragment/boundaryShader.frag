@@ -114,6 +114,8 @@ void main()
 
     // base.x += sin(texCoord.x * PI * 2.0 + iterNum * 0.000005) * (1. - texCoord.y) * 0.00015; // phantom force to simulate high and low pressure areas
 
+    base.y += sin(texCoord.x * PI * 2.0 + iterNum * 0.00001) * (1. - texCoord.y) * 0.0005; // phantom force to simulate high and low pressure areas
+
     float snowCover = 0.;
 
     if (wallX0Ym[1] == 0) { // below is wall
