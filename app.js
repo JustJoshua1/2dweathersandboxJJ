@@ -756,7 +756,7 @@ async function mainScript(
 
     var water_folder = datGui.addFolder('Water');
 
-    water_folder.add(guiControls, 'waterTemperature', 0.0, 35.0, 0.1)
+    water_folder.add(guiControls, 'waterTemperature', 0.0, 65.0, 0.1)
       .onChange(function () {
         gl.useProgram(boundaryProgram);
         gl.uniform1f(
@@ -768,7 +768,7 @@ async function mainScript(
           CtoK(guiControls.waterTemperature));
       })
       .name('Lake / Sea Temp (°C)');
-    water_folder.add(guiControls, 'landEvaporation', 0.0, 0.0002, 0.00001)
+    water_folder.add(guiControls, 'landEvaporation', 0.0, 0.002, 0.00001)
       .onChange(function () {
         gl.useProgram(boundaryProgram);
         gl.uniform1f(
@@ -1312,10 +1312,10 @@ async function mainScript(
       c.fillRect(0, 0, this.#width, this.#height);
 
       c.font = '15px Arial';
-      c.fillStyle = '#FFFFFF';
+      c.fillStyle = '#fcc8c7';
       c.fillText(printTemp(this.#temperature), 10, 15);
-      //c.fillStyle = '#FFFFFF';
-      //c.fillText(printTemp(this.#dewpoint), 10, 35);
+      c.fillStyle = '#aef5c7';
+      c.fillText(printTemp(this.#dewpoint), 10, 35);
 
       c.beginPath();
       c.moveTo(this.#width / 2, this.#height * 0.75);
