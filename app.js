@@ -1246,8 +1246,8 @@ async function mainScript(
 
 
   class Weatherstation {
-    #width = 70; // display size
-    #height = 35;
+    #width = 140; // display size
+    #height = 55;
     #canvas;
     #c; // 2d canvas context
     #x; // position in simulation
@@ -1255,6 +1255,7 @@ async function mainScript(
 
     #temperature = 0;
     #dewpoint = 0;
+    #velocity  = 0;
 
     constructor(xIn, yIn) {
       this.#x = Math.floor(xIn);
@@ -1287,6 +1288,8 @@ async function mainScript(
         baseTextureValues);
 
       this.#temperature = KtoC(potentialToRealT(baseTextureValues[3], this.#y));
+      //this.#velocity = KtoC(potentialToRealT(baseTextureValues[3], this.#y));
+      this.#velocity = Math.sqrt(potentialToRealT(baseTextureValues[4 * y], 2));
 
       // gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuff_1);
       gl.readBuffer(gl.COLOR_ATTACHMENT1);  // watertexture
@@ -1310,12 +1313,17 @@ async function mainScript(
       c.clearRect(0, 0, this.#width, this.#height);
       c.fillStyle = '#00000000';
       c.fillRect(0, 0, this.#width, this.#height);
+      
+
+      
 
       c.font = '15px Arial';
       c.fillStyle = '#fcc8c7';
       c.fillText(printTemp(this.#temperature), 10, 15);
       c.fillStyle = '#aef5c7';
       c.fillText(printTemp(this.#dewpoint), 10, 35);
+      c.fillStyle = '#ffffff';
+      c.fillText(printVelocity(this.#velocity), 10, 55);
 
       c.beginPath();
       c.moveTo(this.#width / 2, this.#height * 0.75);
@@ -2268,7 +2276,7 @@ async function mainScript(
 
   var initial_T = new Float32Array(304); // sim_res_y + 1
 
-  for (var y = 0; y < sim_res_y + 1; y++) {
+  for (var y = -0; y < sim_res_y + 1; y++) {
     var realTemp = Math.max(
       map_range(y, 0, sim_res_y + 1, 15.0, -70.0),
       -60);
