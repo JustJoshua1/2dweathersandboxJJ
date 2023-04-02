@@ -23,7 +23,7 @@ const saveFileVersionID =
   1939327491;  // Uint32 id to check if save file is compatible
 
 const guiControls_default = {
-  vorticity: 0.005,
+  vorticity: 0.01,  // 0.005
   dragMultiplier: 0.01,  // 0.1
   wind: -0.0001,
   globalEffectsHeight: 5000,
@@ -65,7 +65,7 @@ const guiControls_default = {
   paused: false,
   IterPerFrame: 10,
   auto_IterPerFrame: true,
-  dryLapseRate: 10.0,    // Real: 9.81 degrees / km
+  dryLapseRate: 10,    // Real: 9.81 degrees / km Currently 10
   simHeight: 12000,      // meters 
   imperialUnits: false,  // only for display.  false = metric
 };
@@ -1246,7 +1246,7 @@ async function mainScript(
 
 
   class Weatherstation {
-    #width = 140; // display size
+    #width = 240; // display size
     #height = 55;
     #canvas;
     #c; // 2d canvas context
@@ -1289,9 +1289,15 @@ async function mainScript(
 
       this.#temperature = KtoC(potentialToRealT(baseTextureValues[3], this.#y));
       //this.#velocity = KtoC(potentialToRealT(baseTextureValues[3], this.#y));
-      this.#velocity = Math.sqrt(potentialToRealT(baseTextureValues[4 * y], 2));
-
+      //this.#velocity = KtoC((baseTextureValues[4 *this.#x], 2));
+      //this.#velocity = Math.sqrt(Math.pow(baseTextureValues[4 * y], 2) + Math.pow(baseTextureValues[4 * y + 1], 2)); Failed attempts
       // gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuff_1);
+      //this.#velocity = printVelocity(velocity);
+      this.#velocity /= timePerIteration; // convert to cells per hour
+      this.#velocity *= cellHeight; // convert to meters per hour
+      this.#velocity /= 3600.0; // convert to m/s
+      
+      
       gl.readBuffer(gl.COLOR_ATTACHMENT1);  // watertexture
       var waterTextureValues = new Float32Array(4);
       gl.readPixels(
