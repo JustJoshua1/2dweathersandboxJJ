@@ -1246,7 +1246,7 @@ async function mainScript(
 
 
   class Weatherstation {
-    #width = 200; // display size
+    #width = 90; // display size
     #height = 55;
     #canvas;
     #c; // 2d canvas context
@@ -1294,12 +1294,13 @@ async function mainScript(
       // gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuff_1);
       //this.#velocity = printVelocity(velocity);
       //this.#velocity = KtoC(potentialToRealT(baseTextureValues[0], this.#y));
-      //this.#velocity /= timePerIteration; // convert to cells per hour
-      //this.#velocity *= cellHeight; // convert to meters per hour
-      //this.#velocity /= 3600.0; // convert to m/s
-      //this.#velocity = KtoC(potentialToRealT(baseTextureValues[4 * this.#y], 2) + Math.pow(baseTextureValues[4 * this.#y + 1], 2))
-      this.#velocity = Math.sqrt(Math.pow(baseTextureValues[4 * y], 2) + Math.pow(baseTextureValues[4 * y + 1], 2));
       
+      //this.#velocity = KtoC(potentialToRealT(baseTextureValues[4 * this.#y], 2) + Math.pow(baseTextureValues[4 * this.#y + 1], 2))
+      
+      this.#velocity = Math.sqrt(Math.pow(baseTextureValues[0],2) + Math.pow(baseTextureValues[1],2));
+      this.#velocity /= timePerIteration; // convert to cells per hour
+      this.#velocity *= cellHeight; // convert to meters per hour
+      this.#velocity /= 3600.0; // convert to m/s
       gl.readBuffer(gl.COLOR_ATTACHMENT1);  // watertexture
       var waterTextureValues = new Float32Array(4);
       gl.readPixels(
@@ -1322,16 +1323,15 @@ async function mainScript(
       c.fillStyle = '#00000000';
       c.fillRect(0, 0, this.#width, this.#height);
       
-
+      c.font = '12px Arial';
       
-
-      c.font = '15px Arial';
       c.fillStyle = '#fcc8c7';
-      c.fillText(printTemp(this.#temperature), 10, 15);
+      c.fillText(printTemp(this.#temperature), 10, 10);
       c.fillStyle = '#aef5c7';
-      c.fillText(printTemp(this.#dewpoint), 10, 35);
+      c.fillText(printTemp(this.#dewpoint), 10, 25);
+      
       c.fillStyle = '#ffffff';
-      c.fillText(printVelocity(this.#velocity), 10, 55);
+      c.fillText(printVelocity(this.#velocity), 10, 40);
 
       c.beginPath();
       c.moveTo(this.#width / 2, this.#height * 0.75);
