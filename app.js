@@ -1246,7 +1246,7 @@ async function mainScript(
 
 
   class Weatherstation {
-    #width = 240; // display size
+    #width = 200; // display size
     #height = 55;
     #canvas;
     #c; // 2d canvas context
@@ -1293,10 +1293,12 @@ async function mainScript(
       //this.#velocity = Math.sqrt(Math.pow(baseTextureValues[4 * y], 2) + Math.pow(baseTextureValues[4 * y + 1], 2)); Failed attempts
       // gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuff_1);
       //this.#velocity = printVelocity(velocity);
-      this.#velocity /= timePerIteration; // convert to cells per hour
-      this.#velocity *= cellHeight; // convert to meters per hour
-      this.#velocity /= 3600.0; // convert to m/s
-      
+      //this.#velocity = KtoC(potentialToRealT(baseTextureValues[0], this.#y));
+      //this.#velocity /= timePerIteration; // convert to cells per hour
+      //this.#velocity *= cellHeight; // convert to meters per hour
+      //this.#velocity /= 3600.0; // convert to m/s
+      //this.#velocity = KtoC(potentialToRealT(baseTextureValues[4 * this.#y], 2) + Math.pow(baseTextureValues[4 * this.#y + 1], 2))
+      this.#velocity = Math.sqrt(Math.pow(baseTextureValues[4 * y], 2) + Math.pow(baseTextureValues[4 * y + 1], 2));
       
       gl.readBuffer(gl.COLOR_ATTACHMENT1);  // watertexture
       var waterTextureValues = new Float32Array(4);
