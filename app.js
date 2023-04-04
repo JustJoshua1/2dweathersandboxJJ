@@ -85,6 +85,8 @@ var sim_res_x;
 var sim_res_y;
 var sim_aspect; //  = sim_res_x / sim_res_y
 
+var cellHeight = 0; // guiControls.simHeight / sim_res_y;  // in meters
+
 var frameNum = 0;
 var lastFrameNum = 0;
 
@@ -242,16 +244,30 @@ function printAltitude(meters) {
     return meters.toFixed() + ' m';
 }
 
-function printVelocity(ms) {
-  let msStr = ms.toFixed() + ' m/s   ';
+function printVelocityMs(ms)
+{
+  return ms.toFixed() + ' m/s';
+}
+
+function printVelocity(ms) 
+{
   if (guiControls.imperialUnits) {
     let mph = ms * 2.23694;
-    return msStr + mph.toFixed() + ' mph';
+    return mph.toFixed() + ' mph';
   } else {
     let kmh = ms * 3.6;
-    return msStr + kmh.toFixed() + ' km/h';
+    return kmh.toFixed() + ' km/h';
   }
 }
+
+function rawVelocityToMs(vel)
+  { // Raw velocity is in cells/iteration
+    vel /= timePerIteration; // convert to cells per hour
+    vel *= cellHeight; // convert to meters per hour
+    vel /= 3600.0; // convert to m/s
+    return vel;
+  }
+
 
 async function loadData() {
   let file = document.getElementById('fileInput').files[0];
@@ -1082,12 +1098,7 @@ async function mainScript(
         var dewPoint = KtoC(dewpoint(waterTextureValues[4 * y]));
         var scrYpos = map_range(y, sim_res_y, 0, 0, graphBottem);
 
-        var velocity = Math.sqrt(Math.pow(baseTextureValues[4 * y], 2) + Math.pow(baseTextureValues[4 * y + 1], 2));
-        // Raw velocity is in cells/iteration
-        velocity /= timePerIteration; // convert to cells per hour
-        velocity *= cellHeight; // convert to meters per hour
-        velocity /= 3600.0; // convert to m/s
-
+        var velocity = rawVelocityToMs(Math.sqrt(Math.pow(baseTextureValues[4 * y], 2) + Math.pow(baseTextureValues[4 * y + 1], 2)));
         c.font = '15px Arial';
         c.fillStyle = 'white';
 
@@ -1246,7 +1257,7 @@ async function mainScript(
 
 
   class Weatherstation {
-    #width = 90; // display size
+    #width = 60; // display size
     #height = 55;
     #canvas;
     #c; // 2d canvas context
@@ -2293,7 +2304,7 @@ async function mainScript(
       realToPotentialT(CtoK(realTemp), y);  // initial temperature profile
   }
 
-  var cellHeight = guiControls.simHeight / sim_res_y;  // in meters
+  cellHeight = guiControls.simHeight / sim_res_y;  // in meters
 
   // Set uniforms
   gl.useProgram(setupProgram);
